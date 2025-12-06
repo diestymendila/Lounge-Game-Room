@@ -33,11 +33,17 @@ class ReceiptController extends Controller
         }
 
         try {
-            $pdf = Pdf::loadView('receipts.pdf', compact('reservation'));
+            $pdf = Pdf::loadView('receipts.pdf', compact('reservation'))
+                ->setPaper('a4', 'portrait')
+                ->setOptions([
+                    'isHtml5ParserEnabled' => true,
+                    'isRemoteEnabled' => true,
+                    'defaultFont' => 'sans-serif'
+                ]);
             
-            return $pdf->download('receipt-' . $reservation->booking_code . '.pdf');
+            return $pdf->download('struk-' . $reservation->booking_code . '.pdf');
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Gagal mengunduh receipt: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Gagal mengunduh struk: ' . $e->getMessage()]);
         }
     }
 

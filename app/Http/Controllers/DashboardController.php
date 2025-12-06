@@ -21,11 +21,10 @@ class DashboardController extends Controller
             return $this->customerDashboard();
         } elseif ($user->isReceptionist()) {
             return $this->receptionistDashboard();
-        } elseif ($user->isManager()) { // Asumsi fungsi isManager() atau isAdmin() ada di model User
+        } elseif ($user->isManager()) {
             return $this->managerDashboard();
         }
 
-        // Default redirect jika role tidak dikenali
         return redirect()->route('login');
     }
 
@@ -63,30 +62,21 @@ class DashboardController extends Controller
     }
 
     /**
-     * Manager/Admin Dashboard
+     * Manager Dashboard
      */
     private function managerDashboard()
     {
-        // 1. Statistik Kartu Atas
         $totalRooms = GameRoom::count();
         $totalReservations = Reservation::count();
-        
-        // Hitung pendapatan (hanya dari status yang valid)
-        $totalRevenue = Reservation::whereIn('status', ['confirmed', 'completed', 'paid'])->sum('total_price');
-        
-        // Hitung user dengan role customer
+        $totalRevenue = Reservation::whereIn('status', ['confirmed', 'completed'])->sum('total_price');
         $totalCustomers = User::where('role', 'customer')->count();
 
-        // 2. Reservasi Terbaru (Untuk tabel history opsional)
         $recentReservations = Reservation::with(['user', 'gameRoom'])
             ->orderBy('created_at', 'desc')
             ->take(10)
             ->get();
 
-        // 3. Data Ruangan untuk Tabel Statistik
-        // PENTING: Kita namakan variablenya $rooms (bukan $gameRooms)
-        // Agar sesuai dengan @foreach($rooms as $room) di view manager.blade.php
-        $rooms = GameRoom::withCount('reservations')->get();
+        $gameRooms = GameRoom::withCount('reservations')->get();
 
         return view('dashboard.manager', compact(
             'totalRooms',
@@ -94,7 +84,7 @@ class DashboardController extends Controller
             'totalRevenue',
             'totalCustomers',
             'recentReservations',
-            'rooms' // <--- Ini perbaikan kuncinya
+            'gameRooms'
         ));
     }
 }

@@ -3,17 +3,12 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameRoomController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// Home route - redirect to dashboard or login
+// Home route
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -43,6 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/reservations/{reservation}', [ReservationController::class, 'update'])->name('reservations.update');
     Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
     Route::post('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+
+    // Payments
+    Route::get('/payments/{reservation}/create', [PaymentController::class, 'create'])->name('payments.create');
+    Route::post('/payments/{reservation}', [PaymentController::class, 'store'])->name('payments.store');
 
     // Receipts
     Route::get('/receipts/{reservation}', [ReceiptController::class, 'show'])->name('receipts.show');

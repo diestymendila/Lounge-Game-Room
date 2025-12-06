@@ -1,189 +1,244 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Lounge Game Room') }}</title>
-
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <title>@yield('title') - Lounge Game Room</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* --- GLOBAL PASTEL THEME --- */
         :root {
-            --pastel-purple-light: #E0C3FC;
-            --pastel-purple-main: #A18CD1;
-            --pastel-bg: #F8F4FF;
-            --text-dark: #4A4A4A;
+            --color-1: #D0D5EA;
+            --color-2: #F0D2DA;
+            --color-3: #B8DAED;
+            --color-4: #BCC6E0;
+            --color-5: #9EACCA;
         }
 
         body {
-            background: linear-gradient(135deg, var(--pastel-purple-light) 0%, #DCD6F7 100%);
-            background-attachment: fixed;
-            font-family: 'Nunito', sans-serif;
-            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--color-1) 0%, var(--color-3) 50%, var(--color-5) 100%);
             min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* --- NAVBAR FLOATING STYLE --- */
-        .navbar-floating {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px rgba(161, 140, 209, 0.15);
-            margin: 20px 20px 0 20px; /* Jarak atas/kiri/kanan */
-            border-radius: 20px;
-            padding: 0.8rem 1.5rem;
-            transition: all 0.3s ease;
-            z-index: 1000;
+        .navbar {
+            background: linear-gradient(90deg, var(--color-4), var(--color-5)) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .navbar-brand {
-            font-weight: 800;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #8E44AD 0%, #A18CD1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            color: white !important;
         }
 
         .nav-link {
-            color: #636E72 !important;
-            font-weight: 600;
-            margin: 0 5px;
-            padding: 8px 16px !important;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            color: rgba(255,255,255,0.9) !important;
+            transition: all 0.3s;
         }
 
-        .nav-link:hover, .nav-link.active {
-            color: #8E44AD !important;
-            background: rgba(224, 195, 252, 0.3);
+        .nav-link:hover {
+            color: white !important;
             transform: translateY(-2px);
         }
 
-        /* User Profile Button */
-        .nav-user-btn {
-            background: linear-gradient(135deg, #E0C3FC 0%, #DCD6F7 100%);
-            color: #5E548E !important;
-            padding: 8px 20px !important;
-            border-radius: 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Content Wrapper - Penting agar tidak tertutup navbar */
-        .py-4 {
-            padding-top: 30px !important; 
-        }
-        
-        /* Dropdown Menu */
-        .dropdown-menu {
+        .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(161, 140, 209, 0.2);
-            padding: 0.5rem;
-            margin-top: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
         }
-        .dropdown-item {
+
+        .card-header {
+            background: linear-gradient(90deg, var(--color-4), var(--color-5));
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--color-4), var(--color-5));
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-success {
+            background: linear-gradient(90deg, #5cb85c, #4cae4c);
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(90deg, #d9534f, #c9302c);
+            border: none;
+        }
+
+        .btn-warning {
+            background: linear-gradient(90deg, #f0ad4e, #ec971f);
+            border: none;
+        }
+
+        .btn-info {
+            background: linear-gradient(90deg, var(--color-3), var(--color-4));
+            border: none;
+        }
+
+        .alert {
             border-radius: 10px;
-            padding: 8px 16px;
+            border: none;
         }
-        .dropdown-item:hover {
-            background-color: #F3E7FC;
-            color: #8E44AD;
+
+        .table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .badge {
+            padding: 0.5em 1em;
+            border-radius: 20px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--color-5);
+            box-shadow: 0 0 0 0.2rem rgba(158, 172, 202, 0.25);
+        }
+
+        .game-room-card {
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .game-room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--color-1), var(--color-3));
+            color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            opacity: 0.3;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
         }
     </style>
+
+    @stack('styles')
 </head>
 <body>
-    <div id="app">
-        
-        <nav class="navbar navbar-expand-md navbar-light fixed-top navbar-floating">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <i class="fas fa-gamepad me-2" style="color: #A18CD1;"></i>
-                    Lounge Game Room
-                </a>
-
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        @auth
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('dashboard') }}">
+                <i class="fas fa-gamepad"></i> Lounge Game Room
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @auth
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
-                                <i class="fas fa-home me-1"></i> Dashboard
+                            <a class="nav-link" href="{{ route('dashboard') }}">
+                                <i class="fas fa-home"></i> Dashboard
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->is('reservations*') ? 'active' : '' }}" href="{{ route('reservations.index') }}">
-                                <i class="fas fa-calendar-alt me-1"></i> Reservasi
+                            <a class="nav-link" href="{{ route('reservations.index') }}">
+                                <i class="fas fa-calendar-check"></i> Reservasi
                             </a>
                         </li>
-                        @endauth
-                    </ul>
-
-                    <ul class="navbar-nav ms-auto">
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle nav-user-btn" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <i class="fas fa-user-circle fa-lg"></i> 
-                                    <span>{{ Auth::user()->name }}</span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">
-                                        <i class="fas fa-user me-2 text-muted"></i> Profil Saya
-                                    </a>
-                                    
-                                    <div class="dropdown-divider"></div>
-
-                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        <i class="fas fa-sign-out-alt me-2"></i> {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @if(auth()->user()->isManager())
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('game-rooms.index') }}">
+                                <i class="fas fa-door-open"></i> Kelola Ruangan
+                            </a>
+                        </li>
+                        @endif
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><span class="dropdown-item-text"><small>Role: {{ ucfirst(auth()->user()->role) }}</small></span></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form action="{{ route('logout') }}" method="POST">
                                         @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </button>
                                     </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                                </li>
+                            </ul>
+                        </li>
+                    @endauth
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <main class="py-4" style="margin-top: 100px;">
-            @yield('content')
-        </main>
-        
+    <!-- Main Content -->
+    <div class="container my-4">
+        <!-- Alert Messages -->
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
+        @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        @endif
+
+        @yield('content')
     </div>
 
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5">
+        <div class="container">
+            <p class="text-dark mb-0">&copy; 2025 Lounge Game Room. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @stack('scripts')
 </body>
 </html>

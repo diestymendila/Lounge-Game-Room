@@ -9,11 +9,6 @@ class Reservation extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'booking_code',
         'user_id',
@@ -24,6 +19,7 @@ class Reservation extends Model
         'duration_hours',
         'total_price',
         'status',
+        'payment_status',
         'notes',
     ];
 
@@ -44,12 +40,20 @@ class Reservation extends Model
     }
 
     /**
+     * Get the payment for the reservation
+     */
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    /**
      * Generate unique booking code
      */
     public static function generateBookingCode()
     {
         do {
-            $code = 'LGR-'.strtoupper(substr(md5(time().rand()), 0, 8));
+            $code = 'LGR-' . strtoupper(substr(md5(time() . rand()), 0, 8));
         } while (self::where('booking_code', $code)->exists());
 
         return $code;
@@ -60,7 +64,7 @@ class Reservation extends Model
      */
     public function getFormattedTotalPriceAttribute()
     {
-        return 'Rp '.number_format($this->total_price, 0, ',', '.');
+        return 'Rp ' . number_format($this->total_price, 0, ',', '.');
     }
 
     /**
@@ -87,6 +91,30 @@ class Reservation extends Model
             'confirmed' => 'Dikonfirmasi',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan',
+            default => 'Unknown'
+        };
+    }
+
+    /**
+     * Get payment status badge
+     */
+    public function getPaymentStatusBadgeAttribute()
+    {
+        return match ($this->payment_status) {
+            'unpaid' => 'danger',
+            'paid' => 'success',
+            default => 'secondary'
+        };
+    }
+
+    /**
+     * Get payment status label
+     */
+    public function getPaymentStatusLabelAttribute()
+    {
+        return match ($this->payment_status) {
+            'unpaid' => 'Belum Dibayar',
+            'paid' => 'Sudah Dibayar',
             default => 'Unknown'
         };
     }

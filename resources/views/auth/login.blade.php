@@ -1,193 +1,141 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Lounge Game Room</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-1: #D0D5EA;
+            --color-2: #F0D2DA;
+            --color-3: #B8DAED;
+            --color-4: #BCC6E0;
+            --color-5: #9EACCA;
+        }
 
-@section('content')
-<style>
-/* --- AUTH PAGE STYLE --- */
-:root {
-    --pastel-purple-light: #E0C3FC;
-    --pastel-purple-main: #A18CD1;
-    --pastel-purple-dark: #8E44AD;
-    --text-dark: #4A4A4A;
-}
+        body {
+            background: linear-gradient(135deg, var(--color-1) 0%, var(--color-3) 50%, var(--color-5) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* Background Full Screen */
-body {
-    background: linear-gradient(135deg, var(--pastel-purple-light) 0%, #DCD6F7 100%);
-    min-height: 100vh;
-}
+        .login-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    /* Gambar sama dengan dashboard */
-    background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=80');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-color: rgba(161, 140, 209, 0.5); /* Overlay Ungu */
-    background-blend-mode: multiply;
-    z-index: -1;
-}
+        .login-header {
+            background: linear-gradient(90deg, var(--color-4), var(--color-5));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
 
-/* Container Tengah */
-.auth-container {
-    min-height: 80vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .login-header i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
 
-/* Kartu Glassmorphism */
-.auth-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 25px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    overflow: hidden;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 450px;
-    transition: transform 0.3s;
-}
+        .btn-login {
+            background: linear-gradient(90deg, var(--color-4), var(--color-5));
+            border: none;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+        }
 
-.auth-card:hover {
-    transform: translateY(-5px);
-}
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
 
-/* Header & Icon */
-.auth-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-.auth-icon {
-    width: 70px; height: 70px;
-    background: linear-gradient(135deg, var(--pastel-purple-light), var(--pastel-purple-main));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: white;
-    margin: 0 auto 15px auto;
-    box-shadow: 0 5px 15px rgba(161, 140, 209, 0.4);
-}
-.auth-title {
-    font-weight: 800;
-    color: var(--pastel-purple-dark);
-    font-size: 1.8rem;
-}
-.auth-subtitle {
-    color: #999;
-    font-size: 0.9rem;
-}
+        .form-control:focus {
+            border-color: var(--color-5);
+            box-shadow: 0 0 0 0.2rem rgba(158, 172, 202, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card login-card">
+                    <div class="login-header">
+                        <i class="fas fa-gamepad"></i>
+                        <h3 class="mb-0">Lounge Game Room</h3>
+                        <p class="mb-0">Silakan login untuk melanjutkan</p>
+                    </div>
+                    <div class="card-body p-4">
+                        @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                        @endif
 
-/* Form Input */
-.form-group { margin-bottom: 1.2rem; }
-.form-label {
-    font-weight: 700;
-    color: var(--text-dark);
-    font-size: 0.9rem;
-    margin-left: 5px;
-}
-.form-control-custom {
-    border-radius: 12px;
-    padding: 12px 15px;
-    border: 1px solid #eee;
-    background: #fdfdfd;
-    transition: all 0.3s;
-}
-.form-control-custom:focus {
-    border-color: var(--pastel-purple-main);
-    box-shadow: 0 0 0 4px rgba(224, 195, 252, 0.3);
-}
+                        @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
 
-/* Tombol Login */
-.btn-auth {
-    background: linear-gradient(135deg, var(--pastel-purple-main) 0%, var(--pastel-purple-dark) 100%);
-    border: none;
-    border-radius: 12px;
-    padding: 12px;
-    font-weight: 700;
-    color: white;
-    width: 100%;
-    margin-top: 1rem;
-    box-shadow: 0 5px 15px rgba(161, 140, 209, 0.4);
-    transition: all 0.3s;
-}
-.btn-auth:hover {
-    transform: scale(1.02);
-    color: white;
-    box-shadow: 0 8px 20px rgba(161, 140, 209, 0.6);
-}
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope"></i> Email
+                                </label>
+                                <input type="email" name="email" class="form-control" value="{{ old('email') }}" required autofocus>
+                            </div>
 
-/* Link Bawah */
-.auth-footer {
-    text-align: center;
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
-}
-.auth-link {
-    color: var(--pastel-purple-main);
-    font-weight: 700;
-    text-decoration: none;
-}
-.auth-link:hover { text-decoration: underline; color: var(--pastel-purple-dark); }
-</style>
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-lock"></i> Password
+                                </label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
 
-<div class="container auth-container">
-    <div class="auth-card">
-        <div class="auth-header">
-            <div class="auth-icon">
-                <i class="fas fa-gamepad"></i>
-            </div>
-            <h3 class="auth-title">Welcome Back!</h3>
-            <p class="auth-subtitle">Silakan login untuk masuk ke Lounge.</p>
-        </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" name="remember" class="form-check-input" id="remember">
+                                <label class="form-check-label" for="remember">
+                                    Ingat saya
+                                </label>
+                            </div>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
+                            <button type="submit" class="btn btn-login w-100 mb-3">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
 
-            <div class="form-group">
-                <label for="email" class="form-label">Email Address</label>
-                <input id="email" type="email" class="form-control form-control-custom @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="name@example.com">
-                @error('email')
-                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <div class="d-flex justify-content-between">
-                    <label for="password" class="form-label">Password</label>
-                    @if (Route::has('password.request'))
-                        <a class="auth-link" style="font-size: 0.8rem;" href="{{ route('password.request') }}">Lupa Password?</a>
-                    @endif
+                            <div class="text-center">
+                                <p class="mb-0">Belum punya akun? <a href="{{ route('register') }}" class="text-decoration-none">Daftar disini</a></p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <input id="password" type="password" class="form-control form-control-custom @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="••••••••">
-                @error('password')
-                    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                @enderror
-            </div>
 
-            <div class="form-group">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                    <label class="form-check-label text-muted" for="remember">
-                        Ingat Saya
-                    </label>
+                <div class="text-center mt-3">
+                    <small class="text-dark">
+                        <strong>Demo Accounts:</strong><br>
+                        Customer: customer@test.com / password<br>
+                        Receptionist: receptionist@test.com / password<br>
+                        Manager: manager@test.com / password
+                    </small>
                 </div>
             </div>
-
-            <button type="submit" class="btn btn-auth">
-                LOGIN <i class="fas fa-sign-in-alt ml-2"></i>
-            </button>
-        </form>
-
-        <div class="auth-footer">
-            <span class="text-muted">Belum punya akun?</span>
-            <a href="{{ route('register') }}" class="auth-link">Daftar Sekarang</a>
         </div>
     </div>
-</div>
-@endsection
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
